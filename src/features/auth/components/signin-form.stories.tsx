@@ -1,11 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { within, expect } from "@storybook/test";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { SignInForm } from "./signin-form";
-import { mockUser } from "@/mocks/user-mock";
-
-jest.mock("@/lib/user/user-data-fetcher", () => ({
-  fetchUserData: jest.fn().mockResolvedValue(mockUser),
-}));
+import { signInAction } from "#actions"; // モックをインポート
 
 const meta: Meta<typeof SignInForm> = {
   title: "features/auth/components/signin-form",
@@ -16,19 +12,111 @@ const meta: Meta<typeof SignInForm> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof SignInForm>;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {
-    userData: mockUser,
+const playSubmit: Story["play"] = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  await userEvent.click(canvas.getByRole("button", { name: "ログイン" }));
+};
+
+const playFillEmail: Story["play"] = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  await userEvent.type(
+    canvas.getByLabelText("メールアドレス"),
+    "test@example.com"
+  );
+};
+
+const playFillPassword: Story["play"] = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  await userEvent.type(canvas.getByLabelText("パスワード"), "password123");
+};
+
+const playFillAll: Story["play"] = async (args) => {
+  await playFillEmail(args);
+  await playFillPassword(args);
+};
+
+const playInvalidEmail: Story["play"] = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  await userEvent.type(canvas.getByLabelText("メールアドレス"), "invalidEmail");
+};
+
+export const Default: Story = {};
+
+export const Success: Story = {
+  beforeEach: () => {
+    // ダミーの動作を設定
+    signInAction.mockImplementation(async () => ({
+      status: "success",
+    }));
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    await expect(canvas.getByLabelText("メールアドレス")).toBeVisible();
-    await expect(canvas.getByLabelText("パスワード")).toBeVisible();
-    await expect(
-      canvas.getByRole("button", { name: "ログイン" })
-    ).toBeVisible();
+  play: async (args) => {
+    await playFillAll(args);
+    await playSubmit(args);
+    await waitFor(() => {
+      expect(signInAction).toHaveBeenCalled();
+    });
+    await expect(within(args.canvasElement).queryByText("Error:")).toBeNull();
   },
 };
+
+export const EmptyValidation: Story = {
+  play: async (args) => {
+    await playSubmit(args);
+    await waitFor(() => {
+      expect(
+        within(args.canvasElement).getByText("メールアドレスを入力して下さい")
+      );
+      expect(
+        within(args.canvasElement).getByText("パスワードを入力して下さい")
+      );
+    });
+  },
+};
+
+export const InvalidEmailValidation: Story = {
+  play: async (args) => {
+    await playInvalidEmail(args);
+    await playSubmit(args);
+    await waitFor(() => {
+      expect(
+        within(args.canvasElement).getByText("メールアドレスの形式が不正です")
+      );
+    });
+  },
+};
+
+// export const ErrorCase: Story = {
+//   beforeEach: () => {
+//     signInAction.mockImplementation(async () => {
+//       return {
+//         status: "error",
+//         formErrors: ["メールアドレスまたはパスワードが間違っています"],
+//       };
+//     });
+//   },
+//   play: async (args) => {
+//     const canvas = within(args.canvasElement);
+
+//     await playFillAll(args);
+//     await playSubmit(args);
+//     await waitFor(
+//       () => {
+//         expect(signInAction).toHaveBeenCalled();
+//       },
+//       { timeout: 2000 }
+//     );
+
+//     // エラーメッセージを柔軟に確認
+//     await waitFor(
+//       () => {
+//         // 方法1: 部分一致検索
+//         const errorMessage = canvas.getByText(
+//           /(ログインに失敗しました|メールアドレスまたはパスワードが間違っています)/
+//         );
+//       },
+//       { timeout: 2000 }
+//     );
+//   },
+// };
