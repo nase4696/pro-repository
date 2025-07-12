@@ -12,6 +12,13 @@ const preview: Preview = {
     a11y: {
       test: "todo",
     },
+    nextjs: {
+      appDirectory: true, // App Router対応
+      // ここでグローバルなパラメータ設定を追加
+      navigation: {
+        query: { redirect_to: "/bbs/create" },
+      },
+    },
   },
 };
 

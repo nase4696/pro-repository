@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  test-db:
+    image: postgres:16
+    container_name: test-db-container
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    volumes:
+      - test-db-data:/var/lib/postgresql/data
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  test-db-data:
+
+networks:
+  test-network:

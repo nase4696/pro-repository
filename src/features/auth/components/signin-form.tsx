@@ -31,22 +31,24 @@ export function SignInForm() {
           return <Input key={key} {...inputProps} />;
         })()}
         {fields.email.errors && (
-          <p className="text-red-500">{fields.email.errors}</p>
+          <p className="text-red-700">{fields.email.errors}</p>
         )}
       </div>
       <div>
         <Label htmlFor={fields.password.id}>パスワード</Label>
-        <PasswordInput name={fields.password.name} />
+        <PasswordInput name={fields.password.name} id={fields.password.id} />
         {fields.password.errors && (
-          <p className="text-red-500">{fields.password.errors}</p>
+          <p className="text-red-700">{fields.password.errors}</p>
         )}
       </div>
       {form.errors && (
-        <div className="text-red-500">
+        <div className="text-red-700" data-testid="error-container">
           <h2>Error:</h2>
           <ul>
             {form.errors.map((error) => (
-              <li key={error}>{error}</li>
+              <li key={error} role="alert">
+                {error}
+              </li>
             ))}
           </ul>
         </div>

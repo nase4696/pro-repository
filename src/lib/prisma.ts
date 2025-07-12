@@ -2,9 +2,22 @@ import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
+// 環境判別ロジックを追加
+const getDatabaseUrl = () => {
+  if (process.env.NODE_ENV === "test") {
+    return process.env.DATABASE_URL;
+  }
+  return process.env.DATABASE_URL;
+};
+
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
+    datasources: {
+      db: {
+        url: getDatabaseUrl(), // 環境に応じたURLを使用
+      },
+    },
     omit: {
       user: {
         password: true, // パスワードを常に除外

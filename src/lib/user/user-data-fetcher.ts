@@ -3,9 +3,6 @@ import "server-only";
 import { User } from "@prisma/client";
 import { prisma } from "../prisma";
 
-// userを作成する処理だが、passwordを返さないようにする方法はあるのか？また、する必要があるのか？
-// 作成処理でpasswordを含めなかったらどうなるのか確認する
-
 function UserDTO(user: User) {
   return {
     name: user.name,
