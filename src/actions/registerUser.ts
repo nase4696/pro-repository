@@ -85,11 +85,12 @@ export const signInAction = async (prevState: unknown, formData: FormData) => {
     throw new Error("システムエラーが発生しました。再度お試しください");
   }
 
-  redirect(
-    `${from}?toast_code=login_success&redirect_to=${formData.get(
-      "redirect_to"
-    )}`
-  );
+  let url = `${from}?toast_code=login_success`;
+  const redirectTo = formData.get("redirect_to");
+  if (redirectTo) {
+    url += `&redirect_to=${redirectTo.toString()}`;
+  }
+  redirect(url);
 };
 
 export const signOutAction = async () => {

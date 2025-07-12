@@ -10,7 +10,7 @@
     "test": "dotenv -e .env.test -- jest",
     "bun": "bun test",
     "test:dev": "bun test --preload ./tests/setup.ts --smol",
-    "test:watch": "dotenv -e .env.test -- jest --watch",
+    "test:watch": "bun test --preload ./tests/setup.ts --smol --watch",
     "test:cov": "dotenv -e .env.test -- jest --coverage",
     "test:e2e": "playwright test",
     "storybook": "storybook dev -p 6006",

@@ -1,4 +1,4 @@
-import { mock, describe, expect, test } from "bun:test"; // 最初にモックをインポート
+import { mock, describe, expect, test, beforeEach } from "bun:test"; // 最初にモックをインポート
 
 // 絶対に最初にserver-onlyをモック
 mock.module("server-only", () => ({
@@ -22,6 +22,11 @@ mock.module("@/auth", () => ({
 }));
 
 describe("signInAction", () => {
+  beforeEach(() => {
+    redirectMock.mockReset(); // 呼び出し履歴をクリア
+    signInMock.mockReset(); // 設定もリセット
+  });
+
   test("正しい認証情報でリダイレクト", async () => {
     // 認証成功をモック
     signInMock.mockResolvedValue({ ok: true });
@@ -38,6 +43,19 @@ describe("signInAction", () => {
     expect(redirectMock).toHaveBeenCalledWith(
       "/dashboard?toast_code=login_success&redirect_to=/dashboard"
     );
+  });
+
+  test("リダイレクト先指定なしでデフォルト移動", async () => {
+    // 認証成功をモック
+    signInMock.mockResolvedValue({ ok: true });
+
+    const formData = new FormData();
+    formData.append("email", "test@example.com");
+    formData.append("password", "correctPassword");
+
+    await signInAction(null, formData);
+
+    expect(redirectMock).toHaveBeenCalledWith("/home?toast_code=login_success");
   });
 
   test("間違ったパスワードでエラー表示", async () => {
@@ -58,6 +76,31 @@ describe("signInAction", () => {
       "メールアドレスまたはパスワードが間違っています"
     );
   });
-  // 現在の状態でgithubのリポジトリにpushする
-  // 次のテストからfeatureブランチをさくせいしてから実装する
+
+  // システムエラーテスト
+  test("認証システムエラー時の処理", async () => {
+    // 予期せぬエラーをモック
+    signInMock.mockRejectedValue(new Error("DB接続エラー"));
+
+    const formData = new FormData();
+    formData.append("email", "test@example.com");
+    formData.append("password", "password123");
+
+    // エラーがスローされることを確認
+    await expect(signInAction(null, formData)).rejects.toThrow(
+      "システムエラーが発生しました"
+    );
+  });
+
+  // 無効なメール形式のテスト
+  test("不正なメールアドレスでバリデーションエラーが発生する", async () => {
+    const formData = new FormData();
+    formData.append("email", "wrongEmail");
+    formData.append("password", "wrongPassword");
+
+    const result = await signInAction(null, formData);
+
+    // エラーメッセージを正しい場所で確認
+    expect(result.status).toBe("error");
+  });
 });
