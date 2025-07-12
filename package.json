@@ -11,7 +11,7 @@
     "bun": "bun test",
     "test:dev": "bun test --preload ./tests/setup.ts --smol",
     "test:watch": "bun test --preload ./tests/setup.ts --smol --watch",
-    "test:cov": "dotenv -e .env.test -- jest --coverage",
+    "test:cov": "bun test --coverage",
     "test:e2e": "playwright test",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
