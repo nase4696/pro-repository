@@ -7,10 +7,12 @@ mock.module("server-only", () => ({
 }));
 
 const { signInAction } = await import("@/actions/registerUser");
+const { signOutAction } = await import("@/actions/registerUser");
 import { AuthError } from "next-auth";
 
 const redirectMock = mock();
 const signInMock = mock();
+const signOutMock = mock();
 
 mock.module("next/navigation", () => ({
   redirect: redirectMock,
@@ -19,6 +21,7 @@ mock.module("next/navigation", () => ({
 mock.module("@/auth", () => ({
   // 追加
   signIn: signInMock,
+  signOut: signOutMock,
 }));
 
 describe("signInAction", () => {
@@ -102,5 +105,16 @@ describe("signInAction", () => {
 
     // エラーメッセージを正しい場所で確認
     expect(result.status).toBe("error");
+  });
+});
+
+describe("signOutAction", () => {
+  test("ログアウト後にトップページにリダイレクトされる", async () => {
+    await signOutAction();
+
+    expect(signOutMock).toHaveBeenCalledWith({
+      redirect: true,
+      redirectTo: "/?toast_code=signout_success&redirect_to=/",
+    });
   });
 });
