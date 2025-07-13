@@ -1,3 +1,4 @@
+import { prismaMock } from "#singleton";
 import { mock, describe, expect, test, beforeEach } from "bun:test"; // 最初にモックをインポート
 
 // 絶対に最初にserver-onlyをモック
@@ -6,8 +7,6 @@ mock.module("server-only", () => ({
   default: () => ({}), // 関数形式でダミー実装
 }));
 
-const { signInAction } = await import("@/actions/registerUser");
-const { signOutAction } = await import("@/actions/registerUser");
 import { AuthError } from "next-auth";
 
 const redirectMock = mock();
@@ -23,6 +22,14 @@ mock.module("@/auth", () => ({
   signIn: signInMock,
   signOut: signOutMock,
 }));
+
+const { signInAction, signOutAction, registerAction } = await import(
+  "@/actions/registerUser"
+);
+
+beforeEach(() => {
+  prismaMock._reset();
+});
 
 describe("signInAction", () => {
   beforeEach(() => {
@@ -116,5 +123,45 @@ describe("signOutAction", () => {
       redirect: true,
       redirectTo: "/?toast_code=signout_success&redirect_to=/",
     });
+  });
+});
+
+describe("registerAction", () => {
+  test("登録に成功してログインされる", async () => {
+    prismaMock.user.findUnique.mockResolvedValue(null); // 「ユーザーはいません」
+    prismaMock.user.create.mockResolvedValue({
+      id: "1",
+      name: "ken",
+      email: "test@example.com",
+      password: "correctPassword123",
+      emailVerified: null,
+      image: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    const formData = new FormData();
+    formData.append("email", "test@example.com");
+    formData.append("password", "correctPassword123");
+    formData.append("name", "ken");
+    formData.append("confirmPassword", "correctPassword123");
+    formData.append("redirect_to", "/dashboard");
+
+    const result = await registerAction(null, formData);
+    console.log("登録結果:", result);
+
+    expect(prismaMock.user.findUnique).toHaveBeenCalled();
+    expect(prismaMock.user.create).toHaveBeenCalled();
+
+    expect(signInMock).toHaveBeenCalledWith(
+      "credentials", // 第一引数
+      {
+        // 第二引数（オブジェクト）
+        email: "test@example.com",
+        password: "correctPassword123",
+        redirectTo:
+          "/dashboard?toast_code=register_success&redirect_to=/dashboard",
+      }
+    );
   });
 });

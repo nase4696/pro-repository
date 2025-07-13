@@ -1,14 +1,14 @@
+import { mock } from "bun:test";
+import { createPrismaMock } from "bun-mock-prisma";
 import { PrismaClient } from "@prisma/client";
-import { mockDeep, mockReset, DeepMockProxy } from "jest-mock-extended";
-import { prisma } from "./src/lib/prisma";
+import { prisma } from "@/lib/prisma"; // 本物のPrisma
+import type { PrismaClientMock } from "bun-mock-prisma";
 
-jest.mock("./client", () => ({
+// 偽の司書を配置
+mock.module("@/lib/prisma", () => ({
   __esModule: true,
-  default: mockDeep<PrismaClient>(),
+  prisma: createPrismaMock<PrismaClient>(), // プロの偽物司書
 }));
 
-beforeEach(() => {
-  mockReset(prismaMock);
-});
-
-export const prismaMock = prisma as unknown as DeepMockProxy<PrismaClient>;
+// テストで使えるようにエクスポート
+export const prismaMock = prisma as unknown as PrismaClientMock<PrismaClient>;
