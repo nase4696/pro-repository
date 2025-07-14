@@ -148,7 +148,6 @@ describe("registerAction", () => {
     formData.append("redirect_to", "/dashboard");
 
     const result = await registerAction(null, formData);
-    console.log("登録結果:", result);
 
     expect(prismaMock.user.findUnique).toHaveBeenCalled();
     expect(prismaMock.user.create).toHaveBeenCalled();
@@ -163,5 +162,48 @@ describe("registerAction", () => {
           "/dashboard?toast_code=register_success&redirect_to=/dashboard",
       }
     );
+  });
+
+  test("すでに存在するメールアドレスで登録するとエラー", async () => {
+    prismaMock.user.findUnique.mockResolvedValue({
+      id: "1",
+      name: "ken",
+      email: "existing@example.com",
+      password: "correctPassword123",
+      emailVerified: null,
+      image: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    const formData = new FormData();
+    formData.append("email", "existing@example.com");
+    formData.append("password", "correctPassword123");
+    formData.append("name", "ken");
+    formData.append("confirmPassword", "correctPassword123");
+
+    const result = await registerAction(null, formData);
+
+    expect(result.error?.[""]).toContain(
+      "このメールアドレスはすでに登録されています"
+    );
+  });
+
+  test("不正な入力でバリデーションエラーが発生する", async () => {
+    const formData = new FormData();
+    formData.append("email", "invalid.com");
+    formData.append("password", "invalidPassword");
+    formData.append("name", "longUserName");
+    formData.append("confirmPassword", "differentPassword");
+
+    const result = await registerAction(null, formData);
+    console.log("登録結果:", result);
+
+    expect(result.error?.name).toContain("ユーザー名は8文字以内でお願いします");
+    expect(result.error?.email).toContain("メールアドレスの形式が不正です");
+    expect(result.error?.password).toContain(
+      "少なくとも1つの英字、1つの数字を含んでいる必要があります"
+    );
+    expect(result.error?.confirmPassword).toContain("パスワードが一致しません");
   });
 });
