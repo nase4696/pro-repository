@@ -206,4 +206,22 @@ describe("registerAction", () => {
     );
     expect(result.error?.confirmPassword).toContain("パスワードが一致しません");
   });
+
+  test("不正な入力でバリデーションエラーが発生する", async () => {
+    const formData = new FormData();
+    formData.append("email", "invalid.com");
+    formData.append("password", "invalidPassword");
+    formData.append("name", "longUserName");
+    formData.append("confirmPassword", "differentPassword");
+
+    const result = await registerAction(null, formData);
+    console.log("登録結果:", result);
+
+    expect(result.error?.name).toContain("ユーザー名は8文字以内でお願いします");
+    expect(result.error?.email).toContain("メールアドレスの形式が不正です");
+    expect(result.error?.password).toContain(
+      "少なくとも1つの英字、1つの数字を含んでいる必要があります"
+    );
+    expect(result.error?.confirmPassword).toContain("パスワードが一致しません");
+  });
 });
