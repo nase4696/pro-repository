@@ -47,16 +47,6 @@ const createTestBoard = (creatorId: string) => {
   });
 };
 
-const createTestMessage = (boardId: string, authorId: string) => {
-  return prisma.message.create({
-    data: {
-      content: faker.lorem.sentence(),
-      boardId,
-      authorId,
-    },
-  });
-};
-
 describe("fetchSelectBbs", () => {
   // 全テストで共有するデータ
   let testUser: User;
@@ -74,9 +64,11 @@ describe("fetchSelectBbs", () => {
 
   // afterAll: 後片付け
   afterAll(async () => {
-    await prisma.message.deleteMany();
-    await prisma.board.deleteMany();
-    await prisma.user.deleteMany();
+    const deleteBoard = prisma.board.deleteMany();
+    const deleteUser = prisma.user.deleteMany();
+
+    await prisma.$transaction([deleteBoard, deleteUser]);
+
     await prisma.$disconnect();
   });
 
