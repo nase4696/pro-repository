@@ -125,19 +125,29 @@ export async function BbsUpdate(
     redirect("/login");
   }
 
-  const board = await prisma.board.update({
-    where: {
-      id,
-      creatorId: session.user?.id,
-    },
-    data: {
-      title: data?.title,
-      description: data?.description,
-      content: data?.content,
-    },
-  });
+  try {
+    const board = await prisma.board.update({
+      where: {
+        id,
+        creatorId: session.user?.id,
+      },
+      data: {
+        title: data?.title,
+        description: data?.description,
+        content: data?.content,
+      },
+    });
 
-  return BbsDTO(board);
+    return BbsDTO(board);
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        // レコードが見つからないエラーコード
+        throw new Error("投稿が見つからないか権限がありません");
+      }
+    }
+    throw error;
+  }
 }
 
 export async function BbsCreate(data: {
@@ -170,9 +180,19 @@ export async function BbsDelete(postId: string) {
     redirect("/login");
   }
 
-  return await prisma.board.delete({
-    where: {
-      id: postId,
-    },
-  });
+  try {
+    await prisma.board.delete({
+      where: {
+        id: postId,
+        creatorId: session.user?.id, // 追加: 投稿者IDをチェック
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        throw new Error("投稿が見つからないか権限がありません");
+      }
+    }
+    throw error;
+  }
 }
