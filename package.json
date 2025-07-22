@@ -16,7 +16,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
-    "test:db": "dotenv -e .env.test -- bun test --smol src/lib/bbs/__tests__/bbs-data-fetcher.boards.test.ts",
+    "test:db": "dotenv -e .env.test -- bun test --smol src/lib/bbs/__tests__/bbs-crud.test.ts",
     "test:setup": "docker compose up -d test-db && timeout /t 5 && dotenv -e .env.test -- bun prisma migrate deploy",
     "test:teardown": "docker compose down",
     "test:integration": "bun run test:setup && bun run test:db && bun run test:teardown",
