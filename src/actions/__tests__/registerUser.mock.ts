@@ -1,5 +1,5 @@
 import { fn } from "@storybook/test";
-import * as actual from "./registerUser";
+import * as actual from "../registerUser";
 
 // 実際の関数をモック化
 export const signInAction = fn(actual.signInAction).mockName("signInAction");

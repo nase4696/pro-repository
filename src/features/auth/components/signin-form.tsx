@@ -54,6 +54,7 @@ export function SignInForm() {
         </div>
       )}
       <LoadingButton
+        data-testid="login-button"
         isLoading={pending}
         disabled={pending}
         type="submit"

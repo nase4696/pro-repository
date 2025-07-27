@@ -54,7 +54,6 @@ let testUser: User;
 let otherUser: User;
 
 let testBoard: Board;
-let otherTestBoard: Board;
 
 // beforeAll: 全テスト共通の初期化
 beforeAll(async () => {
@@ -62,7 +61,6 @@ beforeAll(async () => {
   otherUser = await createTestUser();
 
   testBoard = await createTestBoard(testUser.id);
-  otherTestBoard = await createTestBoard(otherUser.id);
 });
 
 beforeEach(() => {
@@ -97,12 +95,6 @@ describe("BbsCreate", () => {
     description: faker.lorem.sentence(),
   };
 
-  // const emptyData = {
-  //   title: "",
-  //   content: "",
-  //   description: "",
-  // };
-
   test("掲示板を新規作成できる", async () => {
     const result = await BbsCreate(validData);
     expect(result.title).toBe(validData.title);
@@ -119,11 +111,6 @@ describe("BbsCreate", () => {
     sessionMock.mockResolvedValue(null);
     await expect(BbsCreate(validData)).rejects.toThrow("REDIRECT_TO_LOGIN");
   });
-
-  // このテストが必要かどうか確認
-  // test("未入力で作成するとエラー", async () => {
-  //   await expect(BbsCreate(emptyData)).rejects.toThrow();
-  // });
 });
 
 describe("BbsUpdate", () => {
