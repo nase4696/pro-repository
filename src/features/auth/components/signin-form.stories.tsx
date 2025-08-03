@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { SignInForm } from "./signin-form";
-import { signInAction } from "#actions"; // モックをインポート
+import { signInAction } from "#src/actions/__tests__/registerUser.mock.js"; // モックをインポート
 
 const meta: Meta<typeof SignInForm> = {
   title: "features/auth/components/signin-form",

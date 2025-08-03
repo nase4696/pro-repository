@@ -3,7 +3,7 @@
 import { bbsDeleteAction } from "@/actions/bbs-actions";
 import { messageDeleteAction } from "@/actions/message-actions";
 import { Button } from "@/components/ui/button";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation.js";
 import { toast } from "sonner";
 
 type BbsDeleteButtonProps = {

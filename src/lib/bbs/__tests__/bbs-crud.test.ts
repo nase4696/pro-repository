@@ -1,30 +1,33 @@
 import { prisma } from "@/lib/prisma";
 import {
+  vi,
   afterAll,
   beforeAll,
   beforeEach,
   describe,
   expect,
-  mock,
   test,
-} from "bun:test";
+} from "vitest"; // 変更
 
-mock.module("server-only", () => ({}));
+const { sessionMock, redirectMock } = vi.hoisted(() => ({
+  sessionMock: vi.fn(),
+  redirectMock: vi.fn(),
+}));
+
+vi.mock("server-only", () => ({}));
 
 import { faker } from "@faker-js/faker";
-const { BbsCreate, BbsUpdate, BbsDelete } = await import(
-  "@/lib/bbs/bbs-data-fetcher"
-);
+// const { BbsCreate, BbsUpdate, BbsDelete } = await import(
+//   "@/lib/bbs/bbs-data-fetcher"
+// );
+import { BbsCreate, BbsUpdate, BbsDelete } from "@/lib/bbs/bbs-data-fetcher";
 import { Board, User } from "@prisma/client";
 
-const sessionMock = mock();
-const redirectMock = mock();
-
-mock.module("@/lib/session", () => ({
+vi.mock("@/lib/session", () => ({
   getServerSession: sessionMock,
 }));
 
-mock.module("next/navigation", () => ({
+vi.mock("next/navigation", () => ({
   redirect: redirectMock,
 }));
 
@@ -54,7 +57,6 @@ let testUser: User;
 let otherUser: User;
 
 let testBoard: Board;
-let otherTestBoard: Board;
 
 // beforeAll: 全テスト共通の初期化
 beforeAll(async () => {
@@ -62,7 +64,6 @@ beforeAll(async () => {
   otherUser = await createTestUser();
 
   testBoard = await createTestBoard(testUser.id);
-  otherTestBoard = await createTestBoard(otherUser.id);
 });
 
 beforeEach(() => {
@@ -97,12 +98,6 @@ describe("BbsCreate", () => {
     description: faker.lorem.sentence(),
   };
 
-  // const emptyData = {
-  //   title: "",
-  //   content: "",
-  //   description: "",
-  // };
-
   test("掲示板を新規作成できる", async () => {
     const result = await BbsCreate(validData);
     expect(result.title).toBe(validData.title);
@@ -119,11 +114,6 @@ describe("BbsCreate", () => {
     sessionMock.mockResolvedValue(null);
     await expect(BbsCreate(validData)).rejects.toThrow("REDIRECT_TO_LOGIN");
   });
-
-  // このテストが必要かどうか確認
-  // test("未入力で作成するとエラー", async () => {
-  //   await expect(BbsCreate(emptyData)).rejects.toThrow();
-  // });
 });
 
 describe("BbsUpdate", () => {

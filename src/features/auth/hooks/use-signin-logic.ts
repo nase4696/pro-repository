@@ -1,5 +1,5 @@
-import { signInAction } from "#actions";
-import { useSearchParams } from "next/navigation";
+import { signInAction } from "@/actions/registerUser";
+import { useSearchParams } from "next/navigation.js";
 import { useActionState } from "react";
 
 export function useSigninLogic() {

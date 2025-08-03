@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation.js";
 
 export const SortSelector = () => {
   const searchParams = useSearchParams();

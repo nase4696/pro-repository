@@ -5,7 +5,7 @@ import { loginSchema, registerSchema } from "@/lib/validations/authSchema";
 import { prisma } from "@/lib/prisma";
 import { parseWithZod } from "@conform-to/zod";
 import { signIn, signOut } from "@/auth";
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation.js";
 import { AuthError } from "next-auth";
 import { UserCreate } from "@/lib/user/user-data-fetcher";
 

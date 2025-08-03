@@ -1,40 +1,48 @@
-import { prismaMock } from "#singleton";
-import { mock, describe, expect, test, beforeEach } from "bun:test"; // 最初にモックをインポート
+import prismaMock from "@/mocks/prisma";
 
-// 絶対に最初にserver-onlyをモック
-mock.module("server-only", () => ({
+// モック設定
+vi.mock("server-only", () => ({
   __esModule: true,
-  default: () => ({}), // 関数形式でダミー実装
+  default: () => ({}),
 }));
 
 import { AuthError } from "next-auth";
 
-const redirectMock = mock();
-const signInMock = mock();
-const signOutMock = mock();
+const { signInMock, redirectMock, signOutMock } = vi.hoisted(() => ({
+  signInMock: vi.fn(),
+  redirectMock: vi.fn(),
+  signOutMock: vi.fn(),
+}));
 
-mock.module("next/navigation", () => ({
+// モジュールモック
+vi.mock("next/navigation", () => ({
   redirect: redirectMock,
 }));
 
-mock.module("@/auth", () => ({
-  // 追加
+vi.mock("@/lib/prisma", () => ({
+  prisma: prismaMock,
+}));
+
+vi.mock("@/auth", () => ({
   signIn: signInMock,
   signOut: signOutMock,
 }));
 
-const { signInAction, signOutAction, registerAction } = await import(
-  "@/actions/registerUser"
-);
+import {
+  signInAction,
+  signOutAction,
+  registerAction,
+} from "@/actions/registerUser";
 
 beforeEach(() => {
-  prismaMock._reset();
+  vi.restoreAllMocks();
 });
 
 describe("signInAction", () => {
   beforeEach(() => {
-    redirectMock.mockReset(); // 呼び出し履歴をクリア
-    signInMock.mockReset(); // 設定もリセット
+    // モックリセット方法変更
+    redirectMock.mockClear();
+    signInMock.mockClear();
   });
 
   test("正しい認証情報でリダイレクト", async () => {
@@ -197,7 +205,6 @@ describe("registerAction", () => {
     formData.append("confirmPassword", "differentPassword");
 
     const result = await registerAction(null, formData);
-    console.log("登録結果:", result);
 
     expect(result.error?.name).toContain("ユーザー名は8文字以内でお願いします");
     expect(result.error?.email).toContain("メールアドレスの形式が不正です");
@@ -215,7 +222,6 @@ describe("registerAction", () => {
     formData.append("confirmPassword", "differentPassword");
 
     const result = await registerAction(null, formData);
-    console.log("登録結果:", result);
 
     expect(result.error?.name).toContain("ユーザー名は8文字以内でお願いします");
     expect(result.error?.email).toContain("メールアドレスの形式が不正です");

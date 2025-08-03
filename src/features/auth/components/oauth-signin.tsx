@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { Icons } from "@/components/icons";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation.js";
 import { LoadingButton } from "@/components/ui/button/loading-button";
 
 export function OAuthSignIn() {
