@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation.js";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { Icons } from "../icons";

@@ -2,7 +2,7 @@ import "server-only";
 
 import { Message } from "@prisma/client";
 import { getServerSession } from "../session";
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation.js";
 import { prisma } from "../prisma";
 
 function MessageDTO(msg: Message) {

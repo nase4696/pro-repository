@@ -38,7 +38,12 @@ export const authConfig = {
 
         if (!user || !user.password) return null;
 
+        console.log("入力したパスワード:", credentials.password);
+        console.log("DBパスワード:", user.password);
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        console.log("比較結果:", isPasswordValid);
 
         return isPasswordValid ? user : null;
       },

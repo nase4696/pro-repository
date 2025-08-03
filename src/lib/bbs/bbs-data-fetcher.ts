@@ -3,7 +3,7 @@ import { Board, Prisma } from "@prisma/client";
 import { prisma } from "../prisma";
 import { cache } from "react";
 import { getServerSession } from "../session";
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation.js";
 import { BoardWithCreator } from "@/types/prisma";
 
 function fetchBoardsDTO(board: BoardWithCreator) {

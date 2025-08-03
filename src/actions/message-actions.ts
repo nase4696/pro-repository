@@ -11,7 +11,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation.js";
 
 export const MessagePostAction = async (
   prevState: unknown,

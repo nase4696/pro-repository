@@ -8,7 +8,7 @@ import { registerAction } from "@/actions/registerUser";
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { Label } from "@/components/ui/label";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation.js";
 import { LoadingButton } from "@/components/ui/button/loading-button";
 
 export function RegisterForm() {

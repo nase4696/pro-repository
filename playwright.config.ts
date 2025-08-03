@@ -5,8 +5,10 @@ export default defineConfig({
   timeout: 120000, // テスト1つのタイムアウト時間
   retries: 3, // 失敗時のリトライ回数
   // グローバル設定を追加
-  globalSetup: "./tests/e2e/global-setup.ts",
-  globalTeardown: "./tests/e2e/global-teardown.ts",
+  globalSetup: "./e2e/global-setup.ts",
+  globalTeardown: "./e2e/global-teardown.ts",
+  testDir: "./e2e",
+  fullyParallel: true,
 
   // レポート設定
   reporter: [
@@ -16,7 +18,7 @@ export default defineConfig({
 
   // テスト環境設定
   use: {
-    baseURL: "http://localhost:3000", // ベースURL
+    baseURL: "http://localhost:3001", // ベースURL
     trace: "on-first-retry", // エラー時にトレースを記録
     screenshot: "only-on-failure", // 失敗時にスクリーンショット
     storageState: "storageState.json",
@@ -48,9 +50,11 @@ export default defineConfig({
 
   // Webサーバー起動設定（開発サーバーを自動起動）
   webServer: {
-    command: "npm run dev", // 開発サーバー起動コマンド
-    url: "http://localhost:3000", // アクセスURL
-    reuseExistingServer: !process.env.CI, // CI環境以外でサーバー再利用
+    command: "npm run test:server", // 開発サーバー起動コマンド
+    url: "http://localhost:3001", // アクセスURL
+    reuseExistingServer: false,
     timeout: 120 * 1000, // サーバー起動待機時間（120秒）
+    stdout: "pipe", // 標準出力を取得（エラー時に表示）
+    stderr: "pipe", // 標準エラーを取得
   },
 });

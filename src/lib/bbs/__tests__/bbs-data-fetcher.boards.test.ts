@@ -1,20 +1,30 @@
 import { prisma } from "@/lib/prisma";
-import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+import {
+  vi,
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  test,
+} from "vitest"; // 変更
 
-mock.module("server-only", () => ({}));
+const { sessionMock, redirectMock } = vi.hoisted(() => ({
+  sessionMock: vi.fn(),
+  redirectMock: vi.fn(),
+}));
+
+vi.mock("server-only", () => ({}));
 
 import { faker } from "@faker-js/faker";
-const { fetchBoards } = await import("@/lib/bbs/bbs-data-fetcher");
+import { fetchBoards } from "@/lib/bbs/bbs-data-fetcher";
 import { User } from "@prisma/client";
 
-const sessionMock = mock();
-const redirectMock = mock();
-
-mock.module("@/lib/session", () => ({
+vi.mock("@/lib/session", () => ({
   getServerSession: sessionMock,
 }));
 
-mock.module("next/navigation", () => ({
+vi.mock("next/navigation", () => ({
   redirect: redirectMock,
 }));
 

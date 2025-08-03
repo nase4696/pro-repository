@@ -3,10 +3,10 @@ import { fetchSelectBbs } from "@/lib/bbs/bbs-data-fetcher";
 import { getServerSession } from "@/lib/session";
 import { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation.js";
 
 type Props = {
-  params: { editorId: string };
+  params: Promise<{ editorId: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
