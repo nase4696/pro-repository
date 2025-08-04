@@ -37,9 +37,6 @@ async function globalSetup() {
   await page.getByLabel("パスワード").fill("password123");
   await page.getByRole("button", { name: "ログイン", exact: true }).click();
 
-  console.log("入力パスワード:", "password123");
-  console.log("ハッシュ化済み:", testUser.password);
-
   // ログイン成功を確認（ホームページに遷移）
   await page.waitForURL("http://localhost:3001/home", { timeout: 60000 });
 

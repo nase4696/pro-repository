@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   // テスト全体の設定
-  timeout: 120000, // テスト1つのタイムアウト時間
+  timeout: 60000, // テスト1つのタイムアウト時間
   retries: 3, // 失敗時のリトライ回数
   // グローバル設定を追加
   globalSetup: "./e2e/global-setup.ts",
@@ -32,8 +32,21 @@ export default defineConfig({
   // テストプロジェクト（ブラウザ別）
   projects: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      name: "login-tests",
+      testMatch: "**/*login*.spec.ts", // ログインテストのファイル名パターン
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: { cookies: [], origins: [] },
+      },
+    },
+    // その他のテスト（認証状態を使用する）
+    {
+      name: "logged-in-tests",
+      testMatch: "**/!(*login*).spec.ts", // ログインテスト以外
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "storageState.json", // 認証状態を使用
+      },
     },
     // 必要に応じて他のブラウザを追加
     /*
