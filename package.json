@@ -12,7 +12,7 @@
     "test:dev": "dotenv -e .env.test -- vitest dev",
     "test:watch": "dotenv -e .env.test -- vitest watch",
     "test:cov": "dotenv -e .env.test -- vitest run --coverage",
-    "test:e2e": "set NODE_ENV=test&& dotenv -e .env.test npx playwright test e2e/bbs.spec.ts",
+    "test:e2e": "set NODE_ENV=test&& dotenv -e .env.test npx playwright test e2e/login.spec.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
