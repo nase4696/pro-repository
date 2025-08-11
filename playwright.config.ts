@@ -2,8 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   // テスト全体の設定
-  timeout: 60000, // テスト1つのタイムアウト時間
-  retries: 3, // 失敗時のリトライ回数
+  timeout: 30000, // テスト1つのタイムアウト時間
+  retries: 0, // 失敗時のリトライ回数
   workers: 1,
   // グローバル設定を追加
   globalSetup: "./e2e/global-setup.ts",

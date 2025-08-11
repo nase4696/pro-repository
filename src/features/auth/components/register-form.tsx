@@ -54,14 +54,20 @@ export function RegisterForm() {
       </div>
       <div>
         <Label htmlFor={fields.password.id}>パスワード</Label>
-        <PasswordInput name={fields.password.name} />
+        <PasswordInput
+          name={fields.password.name}
+          data-testid="password-input"
+        />
         {fields.password.errors && (
           <p className="text-red-500">{fields.password.errors}</p>
         )}
       </div>
       <div>
         <Label htmlFor={fields.confirmPassword.id}>パスワード（確認用）</Label>
-        <PasswordInput name={fields.confirmPassword.name} />
+        <PasswordInput
+          name={fields.confirmPassword.name}
+          data-testid="password-confirm-input"
+        />
         {fields.confirmPassword.errors && (
           <p className="text-red-500">{fields.confirmPassword.errors}</p>
         )}
@@ -77,6 +83,7 @@ export function RegisterForm() {
         </div>
       )}
       <LoadingButton
+        data-testid="signup-button"
         isLoading={pending}
         disabled={pending}
         type="submit"
