@@ -12,16 +12,16 @@
     "test:dev": "dotenv -e .env.test -- vitest dev",
     "test:watch": "dotenv -e .env.test -- vitest watch",
     "test:cov": "dotenv -e .env.test -- vitest run --coverage",
-    "test:e2e": "set NODE_ENV=test&& dotenv -e .env.test npx playwright test",
+    "test:e2e": "set NODE_ENV=test&& dotenv -e .env.test npx playwright test e2e/bbs.spec.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
     "test:db": "dotenv -e .env.test -- vitest run src/lib/bbs/__tests__/bbs-data-fetcher.boards.test.ts",
     "test:setup": "docker compose up -d test-db && set NODE_ENV=test&& dotenv -e .env.test -- npx prisma migrate deploy",
-    "test:teardown": "docker compose down",
+    "test:teardown": "docker compose down --volumes",
     "test:integration": "npm run test:setup && npm run test:db && npm run test:teardown",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
-    "seed:test": "set NODE_ENV=test&& dotenv -e .env.test -- npx prisma db seed",
+    "seed:test": "dotenv -e .env.test -- tsx ./prisma/seed.ts",
     "test:server": "set NODE_ENV=test&& dotenv -e .env.test -- next dev -p 3001"
   },
   "dependencies": {
@@ -53,6 +53,7 @@
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "ts-node": "^10.9.2",
     "vaul": "^1.1.2",
     "zod": "^3.24.1"
   },
@@ -93,6 +94,7 @@
     "storybook": "^8.6.14",
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.3.2",
+    "tsx": "^4.20.3",
     "typescript": "^5",
     "vitest": "^3.2.2",
     "vitest-mock-extended": "^3.1.0"
