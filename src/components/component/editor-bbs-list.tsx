@@ -24,6 +24,7 @@ export async function EditorBbsList() {
         <div
           key={post.id}
           className="flex gap-1 sm:gap-2 flex-col sm:flex-row items-center bg-yellow-50 p-1 sm:p-2 rounded-md shadow-md"
+          data-testid="board-item"
         >
           <div className="flex-1 flex justify-between items-center w-full bg-white rounded-md px-1 py-2 sm:p-2 font-semibold border-2 text-xs sm:text-base">
             <p className="flex-1">{post.title}</p>
@@ -54,6 +55,7 @@ export async function EditorBbsList() {
             <Link
               href={`/bbs/editor/${post.id}`}
               className="flex w-full items-center text-sm sm:text-base justify-center border-2 bg-white rounded-md p-2 hover:bg-accent"
+              data-testid="desktop-edit-button"
             >
               <Icons.edit className="sm:h-5 sm:w-5 pr-1" />
               編集

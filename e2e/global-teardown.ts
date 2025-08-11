@@ -8,7 +8,6 @@ export default async function () {
         NOT: { content: "これはテストメッセージです" },
       },
     });
-
     // シードデータ以外の掲示板を削除
     await prisma.board.deleteMany({
       where: {

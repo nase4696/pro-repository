@@ -1,12 +1,27 @@
 import { PrismaClient } from "@prisma/client";
 import { hash } from "bcryptjs";
 
-const prisma = new PrismaClient();
+const createTestPrismaClient = () => {
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL, // 明示的に環境変数から取得
+      },
+    },
+  });
+};
+
+const prisma = createTestPrismaClient();
 
 async function main() {
-  // テストユーザーの作成
-  const testUser = await prisma.user.create({
-    data: {
+  console.log("🔧 シード処理を開始します...");
+  console.log(`🔗 接続先DB: ${process.env.DATABASE_URL}`);
+
+  // テストユーザーの作成（既存なら更新）
+  const testUser = await prisma.user.upsert({
+    where: { email: "test@example.com" },
+    update: {},
+    create: {
       name: "テストユーザー",
       email: "test@example.com",
       password: await hash("password123", 10),
@@ -14,7 +29,7 @@ async function main() {
   });
 
   // テスト掲示板の作成
-  const testBoard = await prisma.board.create({
+  await prisma.board.create({
     data: {
       title: "テスト掲示板",
       description: "これはテスト用の掲示板です",
@@ -22,20 +37,11 @@ async function main() {
       creatorId: testUser.id,
     },
   });
-
-  // テストメッセージの作成
-  await prisma.message.create({
-    data: {
-      content: "これはテストメッセージです",
-      authorId: testUser.id,
-      boardId: testBoard.id,
-    },
-  });
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error("❌ シード処理中にエラーが発生しました:", e);
     process.exit(1);
   })
   .finally(async () => {

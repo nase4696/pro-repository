@@ -23,6 +23,7 @@ async function globalSetup() {
         password: hashedPassword,
       },
     });
+    console.log("global-setupでテストユーザーを作成しました。");
   }
 
   // ブラウザ操作でログイン

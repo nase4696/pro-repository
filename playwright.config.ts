@@ -4,6 +4,7 @@ export default defineConfig({
   // テスト全体の設定
   timeout: 60000, // テスト1つのタイムアウト時間
   retries: 3, // 失敗時のリトライ回数
+  workers: 1,
   // グローバル設定を追加
   globalSetup: "./e2e/global-setup.ts",
   globalTeardown: "./e2e/global-teardown.ts",
