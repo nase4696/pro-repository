@@ -55,6 +55,9 @@ describe("fetchSelectBbs", () => {
 
   // beforeAll: 全テスト共通の初期化
   beforeAll(async () => {
+    await prisma.board.deleteMany();
+    await prisma.user.deleteMany();
+
     testUser = await createTestUser(); // 全テストで使うユーザー
   });
 

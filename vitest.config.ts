@@ -6,6 +6,7 @@ export default defineConfig({
     environment: "jsdom",
     // globals: false, // グローバル変数（expectなど）を無効にする
     setupFiles: "./tests/setup.ts",
+    fileParallelism: false,
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],

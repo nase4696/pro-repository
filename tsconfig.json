@@ -23,7 +23,7 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "#actions": ["./src/actions/__tests__/registerUser.mock.ts"],
+      "#actions": ["src/mocks/registerUser.mock.ts"],
       "#actions/*": ["./src/actions/*"],
       "next/*": ["node_modules/next/*"]
     }

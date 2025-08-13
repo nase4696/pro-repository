@@ -1,5 +1,6 @@
 services:
   test-db:
+    platform: linux/amd64
     image: postgres:16
     container_name: test-db-container
     ports:

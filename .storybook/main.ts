@@ -25,10 +25,8 @@ const config: StorybookConfig = {
       ...config.resolve.alias,
       "server-only": path.resolve(__dirname, "../src/mocks/server-only.ts"),
       "@": path.resolve(__dirname, "../src"),
-      "#actions": path.resolve(
-        __dirname,
-        "../src/actions/registerUser.mock.ts"
-      ),
+      "#actions": path.resolve(__dirname, "../src/actions"),
+      "#mocks": path.resolve(__dirname, "../src/mocks"),
       "@/*": path.resolve(__dirname, "../src/*"),
     };
     return config;
