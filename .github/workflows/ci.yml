@@ -49,7 +49,8 @@ jobs: # 科目ごとの授業
 
       # 4. テスト環境設定
       - name: Setup test environment
-
+        env:
+          AUTH_SECRET: "dummy-secret-for-testing"
         run: |
           # 直接ファイルに書き込む
           echo "DATABASE_URL=postgresql://test:test@localhost:5433/test" > .env.test
