@@ -50,18 +50,13 @@ jobs: # 科目ごとの授業
       # 4. テスト環境設定
       - name: Setup test environment
         env:
-          AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'dummy-secret-for-testing' }}
+          AUTH_SECRET: "dummy-secret-for-testing"
         run: |
           # 直接ファイルに書き込む
           echo "DATABASE_URL=postgresql://test:test@localhost:5433/test" > .env.test
           echo "NODE_ENV=test" >> .env.test
           echo "AUTH_SECRET=$AUTH_SECRET" >> .env.test
           echo "NEXTAUTH_URL=http://localhost:3001" >> .env.test
-
-          # シークレットがダミーか確認
-          if [ "$AUTH_SECRET" = "dummy-secret-for-local" ]; then
-            echo "⚠️ 警告: 本物のシークレットが設定されていません"
-          fi
 
           # マイグレーション実行
           npm run migrate:test
