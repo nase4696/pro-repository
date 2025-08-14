@@ -1,0 +1,98 @@
+name: CI Pipeline # 時間割の名前（例：月曜日の時間割）
+
+on: # いつ実行するか（授業のある日）
+  push: # コードを提出したとき
+    branches: [main] # メインクラス
+  pull_request: # 課題を提出する前
+    branches: [main] # メインクラス
+
+jobs: # 科目ごとの授業
+  test: # テスト科目
+    runs-on: ubuntu-latest # 教室（最新のUbuntu教室）
+    services: # 特別教室の予約
+      test-db: # データベース教室
+        image: postgres:16 # PostgreSQL 16を使う
+        env: # 教室の設定
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5433:5432 # ドア番号
+        options: --health-cmd "pg_isready -U test" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps: # 授業の流れ
+      # 1. 教科書を机に置く
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Node.jsの準備
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 依存関係インストール
+        run: npm ci
+
+      # キャッシュ追加（推奨）
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            .next/cache
+          key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
+
+      # 3. 教材を用意
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. テスト環境設定
+      - name: Setup test environment
+        env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'dummy-secret-for-testing' }}
+        run: |
+          # 直接ファイルに書き込む
+          echo "DATABASE_URL=postgresql://test:test@localhost:5433/test" > .env.test
+          echo "NODE_ENV=test" >> .env.test
+          echo "AUTH_SECRET=$AUTH_SECRET" >> .env.test
+          echo "NEXTAUTH_URL=http://localhost:3001" >> .env.test
+
+          # シークレットがダミーか確認
+          if [ "$AUTH_SECRET" = "dummy-secret-for-local" ]; then
+            echo "⚠️ 警告: 本物のシークレットが設定されていません"
+          fi
+
+          # マイグレーション実行
+          npm run migrate:test
+          # シードデータ投入
+          npm run seed:test
+
+      # 5. 単体テスト
+      - name: Run unit tests
+        run: npm run test:vitest
+
+      # 6. Storybookビルド
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Run Storybook tests
+        run: npx run test:storybook
+
+      # 7. E2Eテスト準備
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # 8. E2Eテスト実行
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      # - name: Upload Test Artifacts
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: test-results
+      #     path: |
+      #       playwright-report/
+      #       coverage/
+      #       storybook-static/

@@ -35,8 +35,6 @@ test("未入力で新規登録ボタンをクリックするとエラーメッ�
 
   await expect(page.getByText("ユーザー名を入力して下さい")).toBeVisible();
   await expect(page.getByText("メールアドレスを入力して下さい")).toBeVisible();
-  // await expect(page.getByText("パスワードを入力して下さい")).toBeVisible();
-  // await expect(page.getByText("パスワードを入力して下さい")).toBeVisible();
 
   await expect(page).not.toHaveURL("http://localhost:3001/home");
 });

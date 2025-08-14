@@ -15,6 +15,9 @@ const getDatabaseUrl = () => {
   return process.env.DATABASE_URL; // メインDB
 };
 
+console.log("現在のNODE_ENV:", process.env.NODE_ENV);
+console.log("使用DB URL:", getDatabaseUrl());
+
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({

@@ -60,6 +60,9 @@ let testBoard: Board;
 
 // beforeAll: 全テスト共通の初期化
 beforeAll(async () => {
+  await prisma.board.deleteMany();
+  await prisma.user.deleteMany();
+
   testUser = await createTestUser();
   otherUser = await createTestUser();
 

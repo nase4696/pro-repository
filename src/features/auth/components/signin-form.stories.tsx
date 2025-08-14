@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { SignInForm } from "./signin-form";
-import { signInAction } from "#src/actions/__tests__/registerUser.mock.js"; // モックをインポート
+import { signInAction } from "@/mocks/registerUser.mock";
 
 const meta: Meta<typeof SignInForm> = {
   title: "features/auth/components/signin-form",
@@ -86,37 +86,3 @@ export const InvalidEmailValidation: Story = {
     });
   },
 };
-
-// export const ErrorCase: Story = {
-//   beforeEach: () => {
-//     signInAction.mockImplementation(async () => {
-//       return {
-//         status: "error",
-//         formErrors: ["メールアドレスまたはパスワードが間違っています"],
-//       };
-//     });
-//   },
-//   play: async (args) => {
-//     const canvas = within(args.canvasElement);
-
-//     await playFillAll(args);
-//     await playSubmit(args);
-//     await waitFor(
-//       () => {
-//         expect(signInAction).toHaveBeenCalled();
-//       },
-//       { timeout: 2000 }
-//     );
-
-//     // エラーメッセージを柔軟に確認
-//     await waitFor(
-//       () => {
-//         // 方法1: 部分一致検索
-//         const errorMessage = canvas.getByText(
-//           /(ログインに失敗しました|メールアドレスまたはパスワードが間違っています)/
-//         );
-//       },
-//       { timeout: 2000 }
-//     );
-//   },
-// };
