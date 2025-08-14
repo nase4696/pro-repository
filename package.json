@@ -11,7 +11,7 @@
     "test:vitest": "dotenv -e .env.test -- vitest run",
     "test:dev": "dotenv -e .env.test -- vitest dev",
     "test:cov": "dotenv -e .env.test -- vitest run --coverage",
-    "test:e2e": "dotenv -e .env.test npx playwright test e2e/login.spec.ts",
+    "test:e2e": "dotenv -e .env.test -- npx playwright test",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test:storybook": "test-storybook",
@@ -22,7 +22,7 @@
     "test:integration": "npm run test:setup && npm run test:db && npm run test:teardown",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
     "seed:test": "dotenv -e .env.test -- tsx ./prisma/seed.ts",
-    "test:server": "dotenv -e .env.test -- next dev -p 3001"
+    "test:server": "NODE_ENV=test dotenv -e .env.test -- next dev -p 3001"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",

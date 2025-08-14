@@ -31,6 +31,9 @@ jobs: # 科目ごとの授業
         with:
           node-version: "20"
 
+      - name: 依存関係インストール
+        run: npm ci
+
       # キャッシュ追加（推奨）
       - name: Cache dependencies
         uses: actions/cache@v3
@@ -47,18 +50,23 @@ jobs: # 科目ごとの授業
       # 4. テスト環境設定
       - name: Setup test environment
         env:
-          DATABASE_URL: postgresql://test:test@localhost:5433/test
-          NODE_ENV: test
-          AUTH_SECRET: "dummy-secret-for-testing"
-          NEXTAUTH_URL: "http://localhost:3001"
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'dummy-secret-for-testing' }}
         run: |
-          # 環境変数ファイル作成
-          echo "DATABASE_URL=$DATABASE_URL" > .env.test
+          # 直接ファイルに書き込む
+          echo "DATABASE_URL=postgresql://test:test@localhost:5433/test" > .env.test
           echo "NODE_ENV=test" >> .env.test
+          echo "AUTH_SECRET=$AUTH_SECRET" >> .env.test
+          echo "NEXTAUTH_URL=http://localhost:3001" >> .env.test
+
+          # シークレットがダミーか確認
+          if [ "$AUTH_SECRET" = "dummy-secret-for-local" ]; then
+            echo "⚠️ 警告: 本物のシークレットが設定されていません"
+          fi
+
           # マイグレーション実行
-          npx prisma migrate deploy
+          npm run migrate:test
           # シードデータ投入
-          npx tsx ./prisma/seed.ts
+          npm run seed:test
 
       # 5. 単体テスト
       - name: Run unit tests
@@ -77,9 +85,7 @@ jobs: # 科目ごとの授業
 
       # 8. E2Eテスト実行
       - name: Run E2E tests
-        run: |
-          # テスト実行
-          npm run test:e2e
+        run: npm run test:e2e
 
       # - name: Upload Test Artifacts
       #   uses: actions/upload-artifact@v3
