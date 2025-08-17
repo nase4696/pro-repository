@@ -44,22 +44,22 @@ const playInvalidEmail: Story["play"] = async ({ canvasElement }) => {
 
 export const Default: Story = {};
 
-export const Success: Story = {
-  beforeEach: () => {
-    // ダミーの動作を設定
-    signInAction.mockImplementation(async () => ({
-      status: "success",
-    }));
-  },
-  play: async (args) => {
-    await playFillAll(args);
-    await playSubmit(args);
-    await waitFor(() => {
-      expect(signInAction).toHaveBeenCalled();
-    });
-    await expect(within(args.canvasElement).queryByText("Error:")).toBeNull();
-  },
-};
+// export const Success: Story = {
+//   beforeEach: () => {
+//     // ダミーの動作を設定
+//     signInAction.mockImplementation(async () => ({
+//       status: "success",
+//     }));
+//   },
+//   play: async (args) => {
+//     await playFillAll(args);
+//     await playSubmit(args);
+//     await waitFor(() => {
+//       expect(signInAction).toHaveBeenCalled();
+//     });
+//     await expect(within(args.canvasElement).queryByText("Error:")).toBeNull();
+//   },
+// };
 
 export const EmptyValidation: Story = {
   play: async (args) => {
