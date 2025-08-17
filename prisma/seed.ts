@@ -14,9 +14,6 @@ const createTestPrismaClient = () => {
 const prisma = createTestPrismaClient();
 
 async function main() {
-  console.log("🔧 シード処理を開始します...");
-  console.log(`🔗 接続先DB: ${process.env.DATABASE_URL}`);
-
   // テストユーザーの作成（既存なら更新）
   const testUser = await prisma.user.upsert({
     where: { email: "test@example.com" },

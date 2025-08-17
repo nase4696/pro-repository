@@ -6,17 +6,11 @@ const globalForPrisma = global as unknown as { prisma: PrismaClient };
 const getDatabaseUrl = () => {
   // テスト環境の場合
   if (process.env.NODE_ENV === "test") {
-    console.log("テスト環境用DBを使用:", process.env.DATABASE_URL);
     return process.env.DATABASE_URL; // テスト専用DB
   }
 
-  // 開発環境 or 本番環境の場合
-  console.log("開発/本番環境用DBを使用");
   return process.env.DATABASE_URL; // メインDB
 };
-
-console.log("現在のNODE_ENV:", process.env.NODE_ENV);
-console.log("使用DB URL:", getDatabaseUrl());
 
 export const prisma =
   globalForPrisma.prisma ||

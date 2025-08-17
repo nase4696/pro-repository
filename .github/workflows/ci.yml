@@ -67,16 +67,21 @@ jobs: # 科目ごとの授業
       - name: Run unit tests
         run: npm run test:vitest
 
-      # 6. Storybookビルド
+      #playwrightのインストール
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      # 5. 作品制作（Storybookビルド）
       - name: Build Storybook
         run: npm run build-storybook
 
-      - name: Run Storybook tests
-        run: npx run test:storybook
-
-      # 7. E2Eテスト準備
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      # 6. 展示会の運営
+      - name: Serve Storybook and run tests
+        run: |
+          # 同時進行で2つの作業
+          npx concurrently -k -s first \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on tcp:6006 && npm run test:storybook"
 
       # 8. E2Eテスト実行
       - name: Run E2E tests
