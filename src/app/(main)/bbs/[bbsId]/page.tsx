@@ -5,11 +5,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 
+type BbsIdProps = {
+  params: Promise<{ bbsId: string }>;
+};
+
 export async function generateMetadata({
   params,
-}: {
-  params: { bbsId: string };
-}): Promise<Metadata> {
+}: BbsIdProps): Promise<Metadata> {
   const { bbsId } = await params;
 
   const post = await fetchSelectBbs(bbsId);
@@ -20,11 +22,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function BbsPage({
-  params,
-}: {
-  params: { bbsId: string };
-}) {
+export default async function BbsPage({ params }: BbsIdProps) {
   const { bbsId } = await params;
 
   return (

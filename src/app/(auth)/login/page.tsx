@@ -9,6 +9,27 @@ import {
 import { OAuthSignIn } from "@/features/auth/components/oauth-signin";
 import { SignInForm } from "@/features/auth/components/signin-form";
 import Link from "next/link";
+import { Suspense } from "react";
+import {
+  OAuthSignInSkeleton,
+  SignInFormSkeleton,
+} from "@/components/ui/skeleton";
+
+function OAuthSignInWithSuspense() {
+  return (
+    <Suspense fallback={<OAuthSignInSkeleton />}>
+      <OAuthSignIn />
+    </Suspense>
+  );
+}
+// SignInFormをSuspenseでラップ
+function SignInFormWithSuspense() {
+  return (
+    <Suspense fallback={<SignInFormSkeleton />}>
+      <SignInForm />
+    </Suspense>
+  );
+}
 
 export default function Login() {
   return (
@@ -21,9 +42,9 @@ export default function Login() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <OAuthSignIn />
+          <OAuthSignInWithSuspense />
           <div className="text-center my-3">or</div>
-          <SignInForm />
+          <SignInFormWithSuspense />
         </CardContent>
         <CardFooter>
           <Link

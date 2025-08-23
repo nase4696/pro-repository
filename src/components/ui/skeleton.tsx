@@ -104,3 +104,73 @@ export function BbsMainContentSkeleton() {
     </div>
   );
 }
+
+export function MainNavSkeleton() {
+  return (
+    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-between sm:items-center mx-auto mb-2 sm:mb-4">
+      {/* モバイル用メニューボタン */}
+      <div className="sm:hidden flex">
+        <Skeleton className="h-8 w-16 rounded-md" />
+      </div>
+
+      {/* タイトル部分 */}
+      <Skeleton className="h-6 w-32" />
+
+      {/* デスクトップ用ナビゲーション */}
+      <nav className="hidden sm:flex gap-2">
+        {[...Array(3)].map((_, i) => (
+          <Skeleton key={i} className="h-8 w-24 rounded-md" />
+        ))}
+        <Skeleton className="h-8 w-10 rounded-md" />
+      </nav>
+    </div>
+  );
+}
+
+export function OAuthSignInSkeleton() {
+  return (
+    <div className="p-4">
+      <Skeleton className="h-9 w-full" />
+    </div>
+  );
+}
+
+export function RegisterFormSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-1">
+        <Skeleton className="h-5 w-24" />
+        <Skeleton className="h-9 w-full" />
+      </div>
+      <div className="space-y-1">
+        <Skeleton className="h-5 w-24" />
+        <Skeleton className="h-9 w-full" />
+      </div>
+      <div className="space-y-1">
+        <Skeleton className="h-5 w-24" />
+        <Skeleton className="h-9 w-full" />
+      </div>
+      <div className="space-y-1">
+        <Skeleton className="h-5 w-24" />
+        <Skeleton className="h-9 w-full" />
+      </div>
+      <Skeleton className="h-9 w-full" />
+    </div>
+  );
+}
+
+export function SignInFormSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-1">
+        <Skeleton className="h-5 w-24" />
+        <Skeleton className="h-9 w-full" />
+      </div>
+      <div className="space-y-1">
+        <Skeleton className="h-5 w-24" />
+        <Skeleton className="h-9 w-full" />
+      </div>
+      <Skeleton className="h-9 w-full" />
+    </div>
+  );
+}

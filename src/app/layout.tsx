@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { RedirectToaster } from "@/components/ui/redirect-toaster";
 import { Toaster } from "sonner";
 import { siteConfig } from "@/config/site";
+import { Suspense } from "react";
 
 const fontNotoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
@@ -58,7 +59,9 @@ export default async function RootLayout({
         )}
       >
         {children}
-        <RedirectToaster />
+        <Suspense fallback={null}>
+          <RedirectToaster />
+        </Suspense>
         <Toaster />
       </body>
     </html>
