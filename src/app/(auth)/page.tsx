@@ -8,7 +8,7 @@ export default function Top() {
         ようこそ、掲示板を通じて周りのユーザーと繋がろう
       </h1>
       <p className="text-sm md:text-lg sm:max-w-[30rem] md:max-w-[35rem] lg:max-w-[45rem] text-center py-8 md:py-12">
-        このアプリケーションでは、掲示板の閲覧、コメント投稿、掲示板の作成をすることが可能で、自分にあった掲示板を通じて他のユーザー同士でコミュニケーションをとることができます。
+        このアプリケーションでは掲示板の閲覧、コメント投稿、掲示板の作成をすることが可能で、自分にあった掲示板を通じて他のユーザー同士でコミュニケーションをとることができます。
       </p>
       <div className="flex flex-col sm:flex-row gap-4 w-full justify-center px-1">
         <Button variant="blue" asChild>
