@@ -5,7 +5,7 @@ import { mainNavConfig } from "@/config/navigation";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { page?: string; sort?: string };
+  searchParams: Promise<{ page?: string; sort?: string }>;
 }) {
   const { page, sort } = await searchParams;
 

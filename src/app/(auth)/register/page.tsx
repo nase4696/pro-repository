@@ -1,4 +1,8 @@
 import {
+  OAuthSignInSkeleton,
+  RegisterFormSkeleton,
+} from "@/components/ui/skeleton";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -9,6 +13,23 @@ import {
 import { OAuthSignIn } from "@/features/auth/components/oauth-signin";
 import { RegisterForm } from "@/features/auth/components/register-form";
 import Link from "next/link";
+import { Suspense } from "react";
+
+function OAuthSignInWithSuspense() {
+  return (
+    <Suspense fallback={<OAuthSignInSkeleton />}>
+      <OAuthSignIn />
+    </Suspense>
+  );
+}
+// RegisterFormをSuspenseでラップ
+function RegisterFormWithSuspense() {
+  return (
+    <Suspense fallback={<RegisterFormSkeleton />}>
+      <RegisterForm />
+    </Suspense>
+  );
+}
 
 export default function Register() {
   return (
@@ -19,9 +40,9 @@ export default function Register() {
           <CardDescription>下記から登録方法を選択してください</CardDescription>
         </CardHeader>
         <CardContent>
-          <OAuthSignIn />
+          <OAuthSignInWithSuspense />
           <div className="text-center my-3">or</div>
-          <RegisterForm />
+          <RegisterFormWithSuspense />
         </CardContent>
         <CardFooter>
           <Link
