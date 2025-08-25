@@ -4,7 +4,6 @@ const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 // 環境判別ロジックを追加
 const getDatabaseUrl = () => {
-  // テスト環境の場合
   if (process.env.NODE_ENV === "test") {
     return process.env.DATABASE_URL; // テスト専用DB
   }
