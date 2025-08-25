@@ -20,9 +20,14 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel
 
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
       - name: Set Vercel Environment Variables
         run: |
-          # 環境変数を一度削除してから再登録（存在しない場合はエラーを無視）
           vercel env rm DATABASE_URL production --yes --token=${{ secrets.VERCEL_TOKEN }} || true
           echo "${{ secrets.DATABASE_URL }}" | vercel env add DATABASE_URL production --token=${{ secrets.VERCEL_TOKEN }}
         env:
