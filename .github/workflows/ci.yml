@@ -70,6 +70,7 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           exitZeroOnChanges: true
+          onlyChanged: true
 
       - name: Serve Storybook and run tests
         run: |
