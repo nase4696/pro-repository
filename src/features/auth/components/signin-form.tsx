@@ -24,7 +24,7 @@ export function SignInForm() {
     <form {...getFormProps(form)} action={formAction} className="space-y-4">
       <input type="hidden" name="redirect_to" value={from} />
       <div>
-        <Label htmlFor={fields.email.id}>メール</Label>
+        <Label htmlFor={fields.email.id}>メールアドレス</Label>
         {(() => {
           const props = getInputProps(fields.email, { type: "email" });
           const { key, ...inputProps } = props;
