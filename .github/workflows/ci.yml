@@ -66,7 +66,10 @@ jobs:
 
       # Chromaticテストを追加
       - name: Run Chromatic Tests
-        run: npx chromatic --exit-once-uploaded
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          exitZeroOnChanges: true
 
       - name: Serve Storybook and run tests
         run: |
